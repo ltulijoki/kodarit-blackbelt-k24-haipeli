@@ -45,5 +45,7 @@ public class PlayerController : MonoBehaviour
     private void Move()
     {
         moveInput = controls.Player.Move.ReadValue<Vector2>();
+        Vector2 movement = moveInput * moveSpeed * Time.fixedDeltaTime;
+        body.MovePosition(body.position + movement);
     }
 }
