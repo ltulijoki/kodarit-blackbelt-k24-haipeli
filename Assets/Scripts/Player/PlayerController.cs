@@ -48,4 +48,19 @@ public class PlayerController : MonoBehaviour
         Vector2 movement = moveInput * moveSpeed * Time.fixedDeltaTime;
         body.MovePosition(body.position + movement);
     }
+
+    void Update()
+    {
+        Shoot();
+    }
+
+    private void Shoot()
+    {
+        if (controls.Player.Fire.triggered)
+        {
+            GameObject bullet = BulletPoolManager.Instance.GetBullet();
+            bullet.transform.position = transform.position;
+            bullet.transform.rotation = transform.rotation;
+        }
+    }
 }
