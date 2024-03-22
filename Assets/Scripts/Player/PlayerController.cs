@@ -14,6 +14,7 @@ public class PlayerController : MonoBehaviour
     private Master controls;
 
     private Vector2 moveInput;
+    private Vector2 aimInput;
 
     private void Awake()
     {
@@ -24,7 +25,7 @@ public class PlayerController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
+
     }
 
     private void OnEnable()
@@ -53,6 +54,33 @@ public class PlayerController : MonoBehaviour
     void Update()
     {
         Shoot();
+        Aim();
+    }
+
+    void Aim()
+    {
+        aimInput = controls.Player.Aim.ReadValue<Vector2>();
+        if (aimInput.sqrMagnitude > 0.1)
+        {
+            Vector2 aimDirection = Vector2.zero;
+            if (UsingMouse())
+            {
+                Vector3 mousePosition = Camera.main.ScreenToWorldPoint(Mouse.current.position.ReadValue());
+                mousePosition.z = 0;
+                aimDirection = mousePosition - gunTransform.position;
+            }
+            else
+            {
+                aimDirection = aimInput;
+            }
+            float angle = Mathf.Atan2(aimDirection.x, -aimDirection.y) * Mathf.Rad2Deg;
+            gunTransform.rotation = Quaternion.Euler(0, 0, angle);
+        }
+    }
+
+    private bool UsingMouse()
+    {
+        return Mouse.current.delta.ReadValue().sqrMagnitude > 0.1;
     }
 
     private void Shoot()
