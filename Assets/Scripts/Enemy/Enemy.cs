@@ -18,7 +18,7 @@ public class Enemy : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
+
     }
 
     // Update is called once per frame
@@ -29,8 +29,17 @@ public class Enemy : MonoBehaviour
 
     void Move()
     {
-        if (playerTransform == null) return;
+        if (playerTransform == null)
+        {
+            GetPlayer();
+            return;
+        }
         direction = (playerTransform.position - transform.position).normalized;
         body.MovePosition(body.position + direction * currentSpeed * Time.fixedDeltaTime);
+    }
+
+    void GetPlayer()
+    {
+        playerTransform = GameManager.Instance.playerController.transform;
     }
 }
