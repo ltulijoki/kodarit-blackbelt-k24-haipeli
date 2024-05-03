@@ -3,10 +3,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Enemy : MonoBehaviour
+public class Enemy : MonoBehaviour, IDamageable
 {
     public float currentSpeed = 3;
     public Transform playerTransform;
+    public int maxHealth = 3;
+    private int currentHealth;
     private Rigidbody2D body;
     private Vector2 direction;
 
@@ -19,6 +21,11 @@ public class Enemy : MonoBehaviour
     void Start()
     {
 
+    }
+
+    void OnEnable()
+    {
+        currentHealth = maxHealth;
     }
 
     // Update is called once per frame
@@ -41,5 +48,19 @@ public class Enemy : MonoBehaviour
     void GetPlayer()
     {
         playerTransform = GameManager.Instance.playerController.transform;
+    }
+
+    public void TakeDamage(int damage)
+    {
+        currentHealth -= damage;
+        if (currentHealth <= 0)
+        {
+            Die();
+        }
+    }
+
+    public void Die()
+    {
+        EnemyPoolManager.Instance.ReturnEnemy(gameObject);
     }
 }
