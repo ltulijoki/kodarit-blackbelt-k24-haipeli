@@ -4,12 +4,14 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class PlayerController : MonoBehaviour
+public class PlayerController : MonoBehaviour, IDamageable
 {
     public Transform gunTransform;
     public float moveSpeed = 5f;
     public Sprite sideSprite;
     public Sprite topSprite;
+    public int maxHealth = 5;
+    public int currentHealth;
     private SpriteRenderer spriteRenderer;
 
     private Rigidbody2D body;
@@ -30,6 +32,7 @@ public class PlayerController : MonoBehaviour
     void Start()
     {
         GameManager.Instance.playerController = this;
+        currentHealth = maxHealth;
     }
 
     private void OnEnable()
@@ -116,5 +119,21 @@ public class PlayerController : MonoBehaviour
             bullet.transform.position = gunTransform.position;
             bullet.transform.rotation = gunTransform.rotation;
         }
+    }
+
+    public void TakeDamage(int damage)
+    {
+        currentHealth -= damage;
+        if (currentHealth <= 0)
+        {
+            Die();
+        }
+    }
+
+    public void Die()
+    {
+        Debug.Log("GAME OVER");
+        GameManager.Instance.GameOver();
+        gameObject.SetActive(false);
     }
 }
